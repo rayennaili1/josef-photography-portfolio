@@ -75,8 +75,11 @@ class PhotoController extends Controller
 
                 $ch = curl_init($url);
                 curl_setopt($ch, CURLOPT_POST, 1);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postFields));
+                // Passing $postFields as an array automatically uses multipart/form-data, 
+                // which is much better for large base64 strings than http_build_query.
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 60); // Increase timeout to 60s
                 $exec = curl_exec($ch);
                 $error = curl_error($ch);
                 curl_close($ch);
