@@ -36,6 +36,7 @@ class SettingController extends Controller
             'seo_keywords' => 'photography, portraits, events, josef nhidi, youssef nhidi',
             'seo_author' => 'Josef Nhidi',
             'og_image_url' => '',
+            'google_verification_tag' => '',
         ];
 
         return response()->json(array_merge($defaults, $settings->toArray()));
