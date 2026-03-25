@@ -22,6 +22,10 @@ class PhotoController extends Controller
 
     public function store(Request $request)
     {
+        // Increase limits for large image processing
+        ini_set('memory_limit', '256M');
+        set_time_limit(120);
+
         try {
             $request->validate([
                 'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
