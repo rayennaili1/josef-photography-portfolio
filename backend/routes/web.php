@@ -7,38 +7,47 @@ Route::get('/', function () {
 });
 
 // Temporary Route to create the first admin user
-// Visit: /setup-admin
-// Temporary Route to create the first admin user
-// Visit: /setup-admin
 Route::get('/setup-admin', function () {
-    $user = \App\Models\User::updateOrCreate(
-        ['email' => 'admin@josef.com'],
-        [
-            'name' => 'Josef Admin',
-            'password' => 'password123', // 'hashed' cast in User model handles this automatically
-        ]
-    );
-
-    $count = \App\Models\User::count();
+    $email = 'admin@josef.com';
+    $pass = 'password123';
     
+    // Explicitly delete old user to ensure a fresh start
+    \App\Models\User::where('email', $email)->delete();
+    
+    $user = \App\Models\User::create([
+        'name' => 'Josef Admin',
+        'email' => $email,
+        'password' => $pass, // Hashed automatically by model cast
+    ]);
+
     return [
-        'message' => 'Admin user created/updated successfully!',
-        'email' => 'admin@josef.com',
-        'password' => 'password123',
-        'total_users' => $count,
-        'next_step' => 'Now try logging in at the frontend /admin/josef/login'
+        'status' => 'success',
+        'message' => 'Fresh admin user created!',
+        'user' => [
+            'id' => $user->id,
+            'email' => $user->email,
+            'password_hash_preview' => substr($user->password, 0, 15) . '...',
+        ],
+        'total_db_users' => \App\Models\User::count(),
     ];
 });
 
-// Diagnostic route to check database connection and user existence
+// Diagnostic route with password test
 Route::get('/db-check', function() {
     try {
         \DB::connection()->getPdo();
         $user = \App\Models\User::where('email', 'admin@josef.com')->first();
+        
+        $hash_test = false;
+        if ($user) {
+            $hash_test = \Illuminate\Support\Facades\Hash::check('password123', $user->password);
+        }
+
         return [
             'database' => 'connected',
-            'admin_user_exists' => !!$user,
-            'admin_email' => $user ? $user->email : null,
+            'user_exists' => !!$user,
+            'password_matches_expected' => $hash_test,
+            'php_version' => PHP_VERSION,
             'laravel_version' => app()->version(),
         ];
     } catch (\Exception $e) {
