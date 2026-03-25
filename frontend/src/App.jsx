@@ -62,12 +62,13 @@ function App() {
       }
     };
 
-    window.addEventListener('contextmenu', handleGlobalSecurity);
-    window.addEventListener('keydown', handleGlobalSecurity);
+    // Temporarily disabled for debugging
+    // window.addEventListener('contextmenu', handleGlobalSecurity);
+    // window.addEventListener('keydown', handleGlobalSecurity);
     
     return () => {
-      window.removeEventListener('contextmenu', handleGlobalSecurity);
-      window.removeEventListener('keydown', handleGlobalSecurity);
+      // window.removeEventListener('contextmenu', handleGlobalSecurity);
+      // window.removeEventListener('keydown', handleGlobalSecurity);
     };
   }, []);
 
