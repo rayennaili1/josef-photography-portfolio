@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Photo;
 use App\Models\Album;
+use Illuminate\Support\Facades\Log;
 
 class AnalyticsController extends Controller
 {
